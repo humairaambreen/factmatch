@@ -1,0 +1,40 @@
+# FactMatch
+
+> A beautiful, privacy-first fact discovery app. Learn something new every scroll.
+
+FactMatch is a Progressive Web App (PWA) that presents fascinating facts from Wikipedia and free knowledge APIs in a Pinterest-style masonry feed. Users swipe right on facts they find interesting and left to skip. The feed learns preferences over time using local on-device storage — no accounts, no servers, no tracking.
+
+## What FactMatch Does
+
+- Fetches live facts from Wikipedia Random Articles, Wikipedia "On This Day", Open Trivia Database, Cat Facts API, Dog Facts API, and Advice Slip API
+- Displays facts in a masonry grid with beautiful images from Picsum Photos
+- Supports 63 topic categories: Science, Biology, Chemistry, Physics, Mathematics, Space, Climate, Nature, Geology, Oceanography, Tech, AI, Robotics, Cybersecurity, Engineering, Inventions, History, Geography, Travel, Politics, Economics, Business, Finance, Cryptocurrency, Law, Education, Mythology, Folklore, Archaeology, Military, Crime, Art, Literature, Design, Movies, Entertainment, Music, Architecture, Fashion, Comics, Gaming, Photography, Theatre, Anime, Dance, Healthcare, Psychology, Neuroscience, Mental Health, Fitness, Nutrition, Cooking, Meditation, Sustainability, Sociology, Linguistics, Relationships, Animals, Food, Philosophy, Sports, General
+- Personalized feed via on-device preference learning — no server-side profiling
+- Users can export a shareable profile card as an image
+- Periodic recall quiz to reinforce learning
+
+## Technical Stack
+
+- Next.js 16 (App Router) with React 19
+- TypeScript, Tailwind CSS v4
+- GSAP 3.15 for animations
+- Framer Motion for card interactions
+- Lenis for smooth scrolling
+- PWA with service worker — works offline with cached content
+
+## Privacy
+
+FactMatch stores all data (swipe history, preferences, profile) exclusively in the user's browser localStorage. No data is sent to any server. No analytics. No cookies. No accounts required.
+
+## Source Data
+
+All facts are fetched live from free public APIs:
+- Wikipedia API (https://en.wikipedia.org/api/rest_v1/)
+- Open Trivia DB (https://opentdb.com/api.php)
+- Cat Facts (https://catfact.ninja/fact)
+- Dog Facts (https://dogapi.dog/api/v2/facts)
+- Advice Slip (https://api.adviceslip.com/advice)
+
+## Intended Audience
+
+People who want to learn interesting things casually — students, curious adults, trivia enthusiasts, lifelong learners. FactMatch replaces mindless doom-scrolling with knowledge discovery.
