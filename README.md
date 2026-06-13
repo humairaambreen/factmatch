@@ -1,113 +1,110 @@
 # FactMatch
 
-A Pinterest-style masonry feed of facts — sourced live from Wikipedia and
-several free fact APIs (no hardcoded trivia in source). Tap a card to open
-a full-bleed, blurred "morph" overlay; swipe right ("Useful") or left
-("Skip") like a dating-app deck. Every 4-5 swipes you get a quick recall
-quiz built only from facts you've swiped right. Your profile (name, photo,
-and category interest breakdown) lives entirely in your browser's
-localStorage — nothing is sent to a server — and can be exported as a
-shareable PNG card.
+**Live at [factmatch.vercel.app](https://factmatch.vercel.app)**
 
-## Stack
+FactMatch is a fact discovery app that makes learning feel like scrolling through a feed you actually enjoy. You get a beautiful masonry grid of real facts pulled live from Wikipedia and a handful of free APIs — no hardcoded trivia, no filler content. Open a card, read it, swipe right if it's useful, swipe left if it's not. Your feed gets smarter the more you interact with it, and everything stays on your device.
 
-- **Next.js 16.2.9** (App Router, Turbopack dev & build)
-- **React 19.2**
-- **Tailwind CSS 4.3** (CSS-first `@theme` config)
-- **Framer Motion 12** — shared-layout "morph" transitions + swipe gestures
-- **GSAP 3.15** (ScrollTrigger included free since 3.13) — masonry reveal animations
-- Hand-rolled, dependency-free **service worker** (`public/sw.js`) for an
-  installable offline-capable PWA
+No accounts. No servers. No tracking. Just knowledge.
 
-## Fact sources (all free, no API keys)
+---
 
-Everything is fetched live — nothing is hardcoded:
+## What it does
 
-- **Wikipedia REST API** — `page/random/summary` (near-infinite "did you
-  know" content with images) and `feed/onthisday/selected` (today in history)
-- [Useless Facts API](https://uselessfacts.jsph.dev/)
-- [Cat Facts](https://catfact.ninja/)
-- [Dog API facts](https://dog-api.kinduff.com/)
-- [Numbers API](http://numbersapi.com/) trivia
-- [Open Trivia DB](https://opentdb.com/) (re-categorized into Science,
-  History, Geography, Animals, Art, Sports, Entertainment, Food, General)
-- [Advice Slip API](https://api.adviceslip.com/)
+- Pulls live facts from Wikipedia, trivia databases, and other free sources every time you open it
+- Displays them in a responsive masonry grid with real photography
+- Tap any card to open it full-screen with a morph animation
+- Swipe right (or tap the right side) to mark a fact as useful — swipe left to skip
+- Your feed learns your preferences over time and surfaces more of what you like
+- Every few swipes, you get a quick recall quiz based on facts you've saved — keeps things sticky
+- Export your profile as a shareable image card
+- Installable as a PWA — works offline once cached
 
-If every API is unreachable (fully offline, no cache yet), the feed shows a
-"couldn't reach any fact sources" state with a retry button — no fake
-content is ever shown.
+---
 
-## Personalization & recommendations
+## Fact sources
 
-`lib/recommend.ts` implements a tiny, dependency-free **on-device
-content-similarity model**: it builds bag-of-words term-frequency vectors
-for fact text and ranks new batches by cosine similarity to your
-right-swiped ("useful") facts, combined with category-level engagement
-weights (`lib/storage.ts`). No external ML service or model download — it's
-pure JS and runs instantly.
+Everything is fetched live. Nothing is hardcoded.
 
-## How it works
+| Source | What it provides |
+|---|---|
+| Wikipedia REST API | Random summaries, "on this day" history, real images |
+| Open Trivia DB | Categorized trivia across 10+ subjects |
+| Cat Facts API | Animal category content |
+| Dog API | More animal facts |
+| Advice Slip API | Philosophy / lifestyle cards |
 
-- **Masonry feed** (`components/MasonryFeed.tsx`): CSS-columns, 2/3/4
-  responsive columns, infinite scroll via `IntersectionObserver` (no "load
-  more" button — it just keeps streaming), GSAP `ScrollTrigger` stagger
-  reveals.
-- **Feed tiles** (`components/FactTile.tsx`): real background photography
-  (via Picsum / Wikipedia thumbnails), gradient overlay, category pill,
-  fact text.
-- **Morph overlay** (`components/FactOverlay.tsx`): tapping a card uses a
-  Framer Motion shared `layoutId` so the tile visually expands from its
-  grid position into a centered, blurred-background overlay (leaving ~5%
-  margin around it). Drag left/right to swipe through the deck, "Useful" /
-  "Skip" stamps animate based on drag direction, with pill buttons as a
-  fallback.
-- **Recall quiz** (`components/QuizModal.tsx`): every 4–5 swipes, shown 4
-  facts and asked which one was swiped "Useful" — the correct answer is
-  always drawn from your right-swipe history, never random.
-- **Cookie/consent banner** (`components/CookieConsent.tsx`): asks
-  permission before persisting swipe history & profile to localStorage.
-  Declining just means the session-only personalization (still active in
-  memory) won't be saved for next time.
-- **Profile** (`components/ProfileModal.tsx`): set a name + local photo
-  (stored as base64 in localStorage), see a bar-chart breakdown of your
-  interests per category (like-rate %), and export a PNG profile card
-  (drawn on `<canvas>`, no extra libraries).
+If every source is unreachable and there's no cache, the app shows an offline state with a retry button. It never shows fake or placeholder content.
 
-## Color system
+---
 
-Defined in `app/globals.css` via Tailwind 4's `@theme`:
+## 63 topic categories
 
-| Token | Hex |
-| --- | --- |
-| `--color-onyx` | `#0A0A0A` |
-| `--color-slate` | `#536878` |
-| `--color-alabaster` | `#E5E4E2` |
+Science, Biology, Chemistry, Physics, Mathematics, Space, Climate, Nature, Geology, Oceanography, Tech, AI, Robotics, Cybersecurity, Engineering, Inventions, History, Geography, Travel, Politics, Economics, Business, Finance, Cryptocurrency, Law, Education, Mythology, Folklore, Archaeology, Military, Crime, Art, Literature, Design, Movies, Entertainment, Music, Architecture, Fashion, Comics, Gaming, Photography, Theatre, Anime, Dance, Healthcare, Psychology, Neuroscience, Mental Health, Fitness, Nutrition, Cooking, Meditation, Sustainability, Sociology, Linguistics, Relationships, Animals, Food, Philosophy, Sports, General.
 
-The "Obsidian Chrome" gradient (dark → slate → alabaster) is used for the
-hero banner, overlay accents, and the exported profile card.
+---
 
-## Local development
+## Privacy
+
+All your data — swipe history, preferences, profile name and photo — lives in your browser's `localStorage`. Nothing is ever sent to a server. There are no analytics, no cookies (beyond what you explicitly accept), and no accounts of any kind.
+
+You can clear everything from the Settings panel inside your profile at any time.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Tailwind CSS v4 |
+| Animations | GSAP 3.15 + Framer Motion 12 |
+| Smooth scroll | Lenis 1.3 |
+| PWA | Hand-rolled service worker, web manifest |
+| Personalization | On-device cosine similarity (no ML APIs) |
+| Storage | Browser localStorage only |
+
+---
+
+## How the personalization works
+
+There's no external model or API call involved. `lib/recommend.ts` builds a bag-of-words term-frequency vector from your right-swiped facts and ranks new batches by cosine similarity to what you've engaged with, combined with per-category engagement weights. It runs entirely in the browser in milliseconds.
+
+---
+
+## Running locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Visit `http://localhost:3000`.
+Open `http://localhost:3000`. No environment variables needed — every fact source is free and keyless.
 
-## Deploying to Vercel (free)
+---
 
-1. Push this folder to a GitHub repo.
-2. Go to [vercel.com/new](https://vercel.com/new), import the repo.
-3. Framework preset: **Next.js** (auto-detected). No environment variables
-   required — everything is free/keyless.
-4. Deploy.
+## Deploying
 
-## Notes
+Push to GitHub, then connect to [Vercel](https://vercel.com/new). Framework is auto-detected as Next.js. No environment variables required for the app to run. The app deploys and works fully on Vercel's free tier.
 
-- Swap the icon PNGs in `public/icons/` for your own branding if desired.
-- Picsum/Wikipedia images are loaded `unoptimized` via `next/image` since
-  they're external and already optimized at source — `next.config.ts`
-  allows all `https` remote hosts.
-- To add more free fact sources, add a fetcher function to
-  `FETCHERS` in `lib/facts.ts` — it just needs to return `Fact[]`.
+If you want to add webmaster verification for search consoles, add these to your Vercel environment variables:
+
+```
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
+NEXT_PUBLIC_BING_SITE_VERIFICATION=
+NEXT_PUBLIC_YANDEX_SITE_VERIFICATION=
+NEXT_PUBLIC_BAIDU_SITE_VERIFICATION=
+NEXT_PUBLIC_NAVER_SITE_VERIFICATION=
+NEXT_PUBLIC_PINTEREST_SITE_VERIFICATION=
+```
+
+---
+
+## Extending it
+
+To add a new fact source, add a fetcher function to the `FETCHERS` array in `lib/facts.ts`. It just needs to return `Fact[]`. The category detection in `guessCategory()` in the same file handles auto-categorization based on content keywords.
+
+To add a new category, add it to `CATEGORY_SEEDS` in `lib/facts.ts`, add its color to `CATEGORY_VIVID` in `lib/visuals.ts`, add an icon to `CATEGORY_ICONS` in `components/ProfileModal.tsx`, and include it in the `ALL_CATEGORIES` arrays in `components/OnboardingScreen.tsx` and `components/ProfileModal.tsx`.
+
+---
+
+Built by [Humaira Ambreen](https://humairaambreen.vercel.app)
