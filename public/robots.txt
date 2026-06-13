@@ -40,3 +40,5 @@ User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://factmatch.vercel.app/sitemap.xml
+Sitemap: https://factmatch.vercel.app/rss.xml
+Sitemap: https://factmatch.vercel.app/atom.xml

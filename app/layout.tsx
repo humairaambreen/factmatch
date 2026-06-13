@@ -189,6 +189,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <link rel="alternate" type="application/rss+xml" title="FactMatch RSS" href={`${SITE_URL}/rss.xml`} />
+        <link rel="alternate" type="application/atom+xml" title="FactMatch Atom" href={`${SITE_URL}/atom.xml`} />
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="preconnect" href="https://en.wikipedia.org" />
         <link rel="dns-prefetch" href="https://opentdb.com" />
