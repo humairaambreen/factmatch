@@ -49,7 +49,13 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() =>
-          caches.match("/").then((r) => r ?? new Response("", { status: 503 }))
+          caches.match("/").then(
+            (r) => r ?? new Response("Offline and this page is not cached.", {
+              status: 503,
+              statusText: "Service Unavailable",
+              headers: { "Content-Type": "text/plain; charset=utf-8" },
+            })
+          )
         );
     })
   );
